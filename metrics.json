@@ -1,0 +1,14 @@
+{
+    "result": [
+        {
+            "defaultAggregate": "SUM",
+            "defaultResolutionMS": null,
+            "description": "MySQL - Locks Access Share",
+            "displayName": "MySQL - Locks Access Share",
+            "displayNameShort": "MYSQL - Lck Acc Shr",
+            "isDisabled": 0,
+            "name": "MYSQL_ACCESS_SHARE_LOCKS",
+            "unit": "number"
+        }
+    ]
+}
