@@ -31,18 +31,18 @@ Extracts metrics from a MySQL database instances.
      ```
 
 ### Plugin Configuration Fields
-|Field Name|Description                                       |
+|Field Name|Description                                     |
 |:-------|:-------------------------------------------------|
 |host    |database host name or IP                          |
-|port    |MySQL Port                                   |
+|port    |MySQL Port                                        |
 |database|database name                                     |
-|username|MySQL username                               |
-|password|MySQL Password (if not required put anything)|
+|username|MySQL username                                    |
+|password|MySQL Password (if not required put anything)     |
 |source  |display name                                      |
 
 ### Metrics Collected
 
 |Metric Name                                    |Description                                    |
 |:----------------------------------------------|:----------------------------------------------|
-|MySQL - Locks Access Share                     |MySQL - Locks Access Share                     |
+|                                               |                                               |
 
