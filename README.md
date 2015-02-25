@@ -21,14 +21,11 @@ Extracts metrics from a MySQL database instances.
 
 1. Compile Luvit from SRC
 
-     ```Make.bat for Windows
-		Makefile for nix-based OS
-     ```
+     ```Make.bat``` for Windows ```Makefile``` for nix-based OS
 	 
 2. You may use boundary-meter. Before params.json should be changed for choosen instances.
 
-	```boundary-meter index.lua
-     ```
+	```boundary-meter index.lua```
 
 ### Plugin Configuration Fields
 |Field Name|Description                                     |
