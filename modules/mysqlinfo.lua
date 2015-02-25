@@ -8,6 +8,8 @@
 
 local object = require('core').Object
 local ffi = require("ffi")
+local MySQL = require("luvit-mysql/mysql")
+local uv = require('uv')
 
 --[[ Check os for binding library path
 ]]
@@ -22,6 +24,79 @@ local function callIfNotNil(callback, ...)
     end
 end
 
-local MysqlInfo = object:extend()
+local MySQLInfo = object:extend()
 
-return MysqlInfo
+--[[ Initialize MySQLInfo with connection parameters
+]]
+function MySQLInfo:initialize(host, port, user, pwd, database, source)	
+	self.host = host
+	self.port = port
+	self.user = user
+	self.pwd = pwd
+	self.db = database
+	self.source = source
+	self.connection = nil
+	return self
+end
+
+--[[ Establishing method required to be used before every query
+]]
+function MySQLInfo:establish(queries_callback)
+	self.connection = MySQL.createClient( { host = self.host, database = self.db, user = self.user, port = self.port, password = self.pwd, logfunc=nil } )
+	
+	
+	callIfNotNil(queries_callback, self.connection)
+	
+	return self
+end
+
+
+--[[ Abort TCP MySQL connection
+]]
+function MySQLInfo:abort(connection, queries_callback)
+	connection.socket:pause()
+	callIfNotNil(queries_callback)
+end
+
+
+--[[ Test function
+]]
+function MySQLInfo:test(connection, callback)
+
+	connection:query( string.format("CREATE DATABASE %s", self.db .. self.source), function(err)
+		if err and err.number ~= MySQL.ERROR_DB_CREATE_EXISTS then
+			error("cannot create db" )
+		end
+	end)
+
+	connection:query( string.format("USE %s", self.db .. self.source) )
+
+	connection:query( "DROP TABLE IF EXISTS testtable", function(err,res,fields)
+		assert(not err)
+	end)
+
+	connection:query( "CREATE TABLE testtable (id INT(11) AUTO_INCREMENT, name VARCHAR(255), age INT(11), created DATETIME, PRIMARY KEY (id) )",
+		function(err,res,fields)
+			assert( not err )
+			
+			
+			connection:query( "INSERT INTO testtable SET name = 'ken', age = 40, created=now()",
+			function(err)
+				assert( not err )
+			end)
+			
+			connection:query( "SELECT * FROM testtable", function(err,res,fields)
+			
+				print(fields.name.fieldType, MySQL.FIELD_TYPE_VAR_STRING)
+				for i,v in ipairs(res) do
+					print(v.id, v.name, v.age, v.created.year, v.created.month, v.created.day )
+				end
+				callIfNotNil(callback)
+		end)
+	end)
+	
+	
+end
+
+
+return MySQLInfo
