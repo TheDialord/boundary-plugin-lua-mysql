@@ -7,13 +7,51 @@
   "ignore" : "node_modules",
 
   "metrics" : [
-                
+				 "MYSQL_THREADS_CONNECTED",
+				 "MYSQL_THREADS_RUNNING",
+                 "MYSQL_TABLE_LOCKS_WAITED",
+                 "MYSQL_TABLE_LOCKS_IMMEDIATE",
+                 "MYSQL_QCACHE_FREE_MEMORY",
+                 "MYSQL_MAX_USED_CONNECTIONS"
 	],
 
 	"dashboards": [
        
     ],
     "paramSchema" : [
-       
+       {
+            "title" : "host",
+            "description" : "database host name or IP",
+            "type" : "string",
+            "default" : "127.0.0.1"
+        },
+        {
+            "title" : "port",
+            "description" : "MySQL Port",
+            "type" : "integer",
+            "default" : "5432"
+        },
+        {
+            "title" : "database",
+            "description" : "database name",
+            "type" : "string",
+            "default" : "postgres"
+        },
+        {
+            "title" : "username",
+            "description" : "MySQL username",
+            "type" : "string"
+        },
+        {
+            "title" : "password",
+            "description" : "MySQL Password (if not required put anything)",
+            "type" : "password"
+        },
+        {
+            "title" : "source",
+            "description" : "display name",
+            "type" : "string",
+            "default" : "My_MYSQL_Server"
+        }
     ]
 }

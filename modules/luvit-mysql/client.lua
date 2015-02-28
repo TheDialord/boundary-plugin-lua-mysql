@@ -104,7 +104,7 @@ function Client:new(conf)
 	  end ) 
 	  client.socket:on("end", function()
 		local f = client:connectionErrorHandler()
-		f("socket closed")
+		p("socket closed")
 	  end)
 	  
     end)

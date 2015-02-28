@@ -41,5 +41,11 @@ Extracts metrics from a MySQL database instances.
 
 |Metric Name                                    |Description                                    |
 |:----------------------------------------------|:----------------------------------------------|
-|                                               |                                               |
+|MYSQL_THREADS_CONNECTED|The number of currently open connections|
+|MYSQL_THREADS_RUNNING|The number of threads that are not sleeping|
+|MYSQL_TABLE_LOCKS_WAITED|The number of times that a request for a table lock could not be granted immediately and a wait was needed. If this is high and you have performance problems, you should first optimize your queries, and then either split your table or tables or use replication|
+|MYSQL_TABLE_LOCKS_IMMEDIATE|The number of times that a request for a table lock could be granted immediately.|
+|MYSQL_SLOW_QUERIES|The number of queries that have taken more than long_query_time seconds.|
+|MYSQL_QCACHE_FREE_MEMORY|The amount of free memory for the query cache.|
+|MYSQL_MAX_USED_CONNECTIONS|The maximum number of connections that have been in use simultaneously since the server started.|
 

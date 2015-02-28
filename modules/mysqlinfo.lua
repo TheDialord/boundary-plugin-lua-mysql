@@ -10,13 +10,14 @@ local object = require('core').Object
 local ffi = require("ffi")
 local MySQL = require("luvit-mysql/mysql")
 local uv = require('uv')
+local timer = require('timer')
 
 --[[ Check os for binding library path
-]]
+
 if ffi.os == "Windows" then
 	p("windows OS")
 end
-
+]]
 
 local function callIfNotNil(callback, ...)
     if callback ~= nil then
@@ -42,9 +43,7 @@ end
 --[[ Establishing method required to be used before every query
 ]]
 function MySQLInfo:establish(queries_callback)
-	self.connection = MySQL.createClient( { host = self.host, database = self.db, user = self.user, port = self.port, password = self.pwd, logfunc=nil } )
-	
-	
+	self.connection = MySQL.createClient( { host = self.host, database = self.db, user = self.user, port = self.port, password = self.pwd, logfunc=nil } )	
 	callIfNotNil(queries_callback, self.connection)
 	
 	return self
@@ -54,7 +53,8 @@ end
 --[[ Abort TCP MySQL connection
 ]]
 function MySQLInfo:abort(connection, queries_callback)
-	connection.socket:pause()
+	self.connection.socket:pause()
+	self.connection.socket:shutdown()
 	callIfNotNil(queries_callback)
 end
 
@@ -87,14 +87,57 @@ function MySQLInfo:test(connection, callback)
 			
 			connection:query( "SELECT * FROM testtable", function(err,res,fields)
 			
-				print(fields.name.fieldType, MySQL.FIELD_TYPE_VAR_STRING)
+				p(fields.name.fieldType, MySQL.FIELD_TYPE_VAR_STRING)
 				for i,v in ipairs(res) do
-					print(v.id, v.name, v.age, v.created.year, v.created.month, v.created.day )
+					p(v.id, v.name, v.age, v.created.year, v.created.month, v.created.day )
 				end
 				callIfNotNil(callback)
 		end)
 	end)
 	
+	
+end
+
+--[[ Get main server status metrics
+]]
+function MySQLInfo:get_server_status_metrics(connection, callback)
+
+	connection:query( "SHOW GLOBAL STATUS WHERE Variable_name = 'Queries' OR 1=1;", function(err, res)
+		timer.setTimeout(80, function ()
+			local result = {}
+			for index, value in ipairs(res) do
+				result[value["Variable_name"]] = value["Value"]
+			end
+			callIfNotNil(callback, result)
+		end)
+	end)
+	
+end
+
+
+--[[ Get stats per sec
+]]
+function MySQLInfo:get_stats_per_sec(connection, callback)
+
+	connection:query( "SHOW GLOBAL STATUS;", function(err, firstQueryRes)
+		local firstQuery = {}
+		for index, value in ipairs(firstQueryRes) do
+			firstQuery[value["Variable_name"]] = value["Value"]
+		end
+		timer.setTimeout(1000, function ()
+			connection:query( "SHOW GLOBAL STATUS;", function(err, secondQueryRes)
+				local secondQuery = {}
+				for index, value in ipairs(secondQueryRes) do
+					secondQuery[value["Variable_name"]] = value["Value"]
+				end
+				
+				local QueriesPerSecValue = tonumber(secondQuery['Queries']) - tonumber(firstQuery['Queries'])
+				
+				
+				callIfNotNil(callback, {Queries_per_sec = QueriesPerSecValue})
+			end)
+		end)
+	end)
 	
 end
 

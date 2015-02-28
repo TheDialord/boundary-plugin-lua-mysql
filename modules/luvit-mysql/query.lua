@@ -70,10 +70,10 @@ function Query:new(conf)
       self.field = nil
       packet:on("data", function(buffer,remaining)
           self.log("query row_data_packet receives data. buffer:", buffer, "remaining:", remaining, "nfields:", #self.fields, "ri:", self.rowIndex, "f:", self.field  )
-          
+		
           if not self.field then
             self.field = self.fields[ self.rowIndex ]
-            self.row[ self.field.name ] = ""
+			self.row[ self.field.name ] = ""
           end
 
           if buffer then
