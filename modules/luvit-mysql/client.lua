@@ -93,6 +93,8 @@ function Client:new(conf)
         p(err)
         return
       end
+	  client.socket:keepalive(true, KEEP_ALIVE_TIME_MS)
+	  client.socket:setTimeout(KEEP_ALIVE_TIME_MS, callback)
       client:log("mysql:connected")
 	  
 	  client.socket:on("error", function(err)
@@ -104,10 +106,10 @@ function Client:new(conf)
 	  end ) 
 	  client.socket:on("end", function()
 		local f = client:connectionErrorHandler()
-		p("socket closed")
 	  end)
 	  
     end)
+	
 
   function client:connectionErrorHandler()
     return function(err)
