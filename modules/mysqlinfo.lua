@@ -6,13 +6,15 @@
 --
 --------------------------------------------------------------------------
 
+_G.KEEP_ALIVE_TIME_MS = 1000000
+
 local object = require('core').Object
 local ffi = require("ffi")
 local MySQL = require("luvit-mysql/mysql")
 local uv = require('uv')
 local timer = require('timer')
 
-_G.KEEP_ALIVE_TIME_MS = 1000000
+
 
 --[[ Check os for binding library path
 

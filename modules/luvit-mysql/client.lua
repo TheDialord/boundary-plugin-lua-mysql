@@ -93,7 +93,6 @@ function Client:new(conf)
         p(err)
         return
       end
-	  client.socket:keepalive(true, KEEP_ALIVE_TIME_MS)
 	  client.socket:setTimeout(KEEP_ALIVE_TIME_MS, callback)
       client:log("mysql:connected")
 	  

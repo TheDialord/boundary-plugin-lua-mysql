@@ -1,5 +1,6 @@
 local boundary = require('boundary')
 local mysqlinfo = require('mysqlinfo')
+local table = require('table')
 
 local net = require('net')
 
